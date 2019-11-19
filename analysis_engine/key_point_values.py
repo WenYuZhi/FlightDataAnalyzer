@@ -15608,16 +15608,31 @@ class PitchFor3SecAtHeightMax(KeyPointValueNode):
     NAME_VALUES = {'high': [1000, 500, 500, 500, 500],
                    'low':  [ 500, 100,  50,  20,   7]}
 
+    @classmethod
+    def can_operate(cls, available, ac_type=A('Aircraft Type')):
+        required = ['Vertical Speed For 3 Sec']
+        if ac_type and ac_type.value == 'helicopter':
+            required.extend(['Altitude AGL'])
+        else:
+            required.extend(['Altitude AAL For Flight Phases'])
+        return all_of(required, available)
+
     def derive(self,
                pitch=P('Pitch For 3 Sec'),
+               ac_type=A('Aircraft Type'),
+               # aeroplane
                alt_aal=P('Altitude AAL For Flight Phases'),
+               # helicopter
+               alt_agl=P('Altitude AGL'),
                duration=A('HDF Duration')):
 
         hdf_duration = duration.value * self.frequency if duration else None
+        alt = alt_aal or alt_agl
+
         for high, low in zip(self.NAME_VALUES['high'], self.NAME_VALUES['low']):
             self.create_kpvs_within_slices(
                 pitch.array,
-                trim_slices(alt_aal.slices_from_to(high, low), 3, self.frequency,
+                trim_slices(alt.slices_from_to(high, low), 3, self.frequency,
                             hdf_duration),
                 max_value,
                 replace_values={'high': high, 'low': low}
@@ -15634,16 +15649,31 @@ class PitchFor3SecAtHeightMin(KeyPointValueNode):
     NAME_VALUES = {'high': [1000, 500, 500, 500, 500],
                    'low':  [ 500, 100,  50,  20,   7]}
 
+    @classmethod
+    def can_operate(cls, available, ac_type=A('Aircraft Type')):
+        required = ['Vertical Speed For 3 Sec']
+        if ac_type and ac_type.value == 'helicopter':
+            required.extend(['Altitude AGL'])
+        else:
+            required.extend(['Altitude AAL For Flight Phases'])
+        return all_of(required, available)
+
     def derive(self,
                pitch=P('Pitch For 3 Sec'),
+               ac_type=A('Aircraft Type'),
+               # aeroplane
                alt_aal=P('Altitude AAL For Flight Phases'),
+               # helicopter
+               alt_agl=P('Altitude AGL'),
                duration=A('HDF Duration')):
 
         hdf_duration = duration.value * self.frequency if duration else None
+        alt = alt_aal or alt_agl
+
         for high, low in zip(self.NAME_VALUES['high'], self.NAME_VALUES['low']):
             self.create_kpvs_within_slices(
                 pitch.array,
-                trim_slices(alt_aal.slices_from_to(high, low), 3, self.frequency,
+                trim_slices(alt.slices_from_to(high, low), 3, self.frequency,
                             hdf_duration),
                 min_value,
                 replace_values={'high': high, 'low': low}
@@ -17062,16 +17092,31 @@ class RollFor3SecAtHeightMax(KeyPointValueNode):
     NAME_VALUES = {'high': [1000, 300],
                    'low':  [ 300,  20]}
 
+    @classmethod
+    def can_operate(cls, available, ac_type=A('Aircraft Type')):
+        required = ['Vertical Speed For 3 Sec']
+        if ac_type and ac_type.value == 'helicopter':
+            required.extend(['Altitude AGL'])
+        else:
+            required.extend(['Altitude AAL For Flight Phases'])
+        return all_of(required, available)
+
     def derive(self,
                roll=P('Roll For 3 Sec'),
+               ac_type=A('Aircraft Type'),
+               # aeroplane
                alt_aal=P('Altitude AAL For Flight Phases'),
+               # helicopter
+               alt_agl=P('Altitude AGL'),
                duration=A('HDF Duration')):
 
         hdf_duration = duration.value * self.frequency if duration else None
+        alt = alt_aal or alt_agl
+
         for high, low in zip(self.NAME_VALUES['high'], self.NAME_VALUES['low']):
             self.create_kpvs_within_slices(
                 roll.array,
-                trim_slices(alt_aal.slices_from_to(high, low), 3, self.frequency,
+                trim_slices(alt.slices_from_to(high, low), 3, self.frequency,
                             hdf_duration),
                 max_abs_value,
                 replace_values={'high': high, 'low': low}
