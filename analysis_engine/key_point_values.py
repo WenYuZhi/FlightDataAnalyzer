@@ -15610,12 +15610,12 @@ class PitchFor3SecAtHeightMax(KeyPointValueNode):
 
     @classmethod
     def can_operate(cls, available, ac_type=A('Aircraft Type')):
-        required = ['Vertical Speed For 3 Sec']
-        if ac_type and ac_type.value == 'helicopter':
-            required.extend(['Altitude AGL'])
-        else:
-            required.extend(['Altitude AAL For Flight Phases'])
-        return all_of(required, available)
+        alt = (
+            "Altitude AGL"
+            if ac_type and ac_type.value == "helicopter"
+            else "Altitude AAL For Flight Phases"
+        )
+        return all_of(['Pitch For 3 Sec', alt], available)
 
     def derive(self,
                pitch=P('Pitch For 3 Sec'),
@@ -15651,12 +15651,12 @@ class PitchFor3SecAtHeightMin(KeyPointValueNode):
 
     @classmethod
     def can_operate(cls, available, ac_type=A('Aircraft Type')):
-        required = ['Vertical Speed For 3 Sec']
-        if ac_type and ac_type.value == 'helicopter':
-            required.extend(['Altitude AGL'])
-        else:
-            required.extend(['Altitude AAL For Flight Phases'])
-        return all_of(required, available)
+        alt = (
+            "Altitude AGL"
+            if ac_type and ac_type.value == "helicopter"
+            else "Altitude AAL For Flight Phases"
+        )
+        return all_of(['Pitch For 3 Sec', alt], available)
 
     def derive(self,
                pitch=P('Pitch For 3 Sec'),
@@ -16491,12 +16491,12 @@ class RateOfDescentFor3SecAtHeightMax(KeyPointValueNode):
 
     @classmethod
     def can_operate(cls, available, ac_type=A('Aircraft Type')):
-        required = ['Vertical Speed For 3 Sec']
-        if ac_type and ac_type.value == 'helicopter':
-            required.extend(['Altitude AGL'])
-        else:
-            required.extend(['Altitude AAL For Flight Phases'])
-        return all_of(required, available)
+        alt = (
+            "Altitude AGL"
+            if ac_type and ac_type.value == "helicopter"
+            else "Altitude AAL For Flight Phases"
+        )
+        return all_of(['Vertical Speed For 3 Sec', alt], available)
 
     def derive(self,
                vert_spd=P('Vertical Speed For 3 Sec'),
@@ -17094,12 +17094,12 @@ class RollFor3SecAtHeightMax(KeyPointValueNode):
 
     @classmethod
     def can_operate(cls, available, ac_type=A('Aircraft Type')):
-        required = ['Vertical Speed For 3 Sec']
-        if ac_type and ac_type.value == 'helicopter':
-            required.extend(['Altitude AGL'])
-        else:
-            required.extend(['Altitude AAL For Flight Phases'])
-        return all_of(required, available)
+        alt = (
+            "Altitude AGL"
+            if ac_type and ac_type.value == "helicopter"
+            else "Altitude AAL For Flight Phases"
+        )
+        return all_of(['Roll For 3 Sec', alt], available)
 
     def derive(self,
                roll=P('Roll For 3 Sec'),

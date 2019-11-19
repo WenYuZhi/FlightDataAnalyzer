@@ -17853,6 +17853,7 @@ class TestPitchFor3SecAtHeightMax(unittest.TestCase):
 
     def test_can_operate(self):
         opts = self.node_class.get_operational_combinations(ac_type=helicopter)
+        self.assertTrue(len(opts) > 0)
         for opt in opts:
             self.assertTrue(
                 set(opt).issuperset({'Pitch For 3 Sec', 'Altitude AGL'})
@@ -17962,6 +17963,7 @@ class TestPitchFor3SecAtHeightMin(unittest.TestCase):
 
     def test_can_operate(self):
         opts = self.node_class.get_operational_combinations(ac_type=helicopter)
+        self.assertTrue(len(opts) > 0)
         for opt in opts:
             self.assertTrue(
                 set(opt).issuperset({'Pitch For 3 Sec', 'Altitude AGL'})
@@ -19027,16 +19029,11 @@ class TestRateOfDescentFor3SecAtHeightMax(unittest.TestCase):
 
     def setUp(self):
         self.node_class = RateOfDescentFor3SecAtHeightMax
-        self.operational_combinations_heli = [
-            ('Vertical Speed For 3 Sec',
-             'Aircraft Type',
-             'Altitude AGL',
-             'HDF Duration')
-        ]
         self.function = min_value
 
     def test_can_operate(self):
         opts = self.node_class.get_operational_combinations(ac_type=helicopter)
+        self.assertTrue(len(opts) > 0)
         for opt in opts:
             self.assertTrue(
                 set(opt).issuperset({'Vertical Speed For 3 Sec', 'Altitude AGL'})
@@ -19781,6 +19778,7 @@ class TestRollFor3SecAtHeightMax(unittest.TestCase):
 
     def test_can_operate(self):
         opts = self.node_class.get_operational_combinations(ac_type=helicopter)
+        self.assertTrue(len(opts) > 0)
         for opt in opts:
             self.assertTrue(
                 set(opt).issuperset({'Roll For 3 Sec', 'Altitude AGL'})
