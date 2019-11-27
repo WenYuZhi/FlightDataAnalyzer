@@ -19721,11 +19721,11 @@ class EngMaxMixin:
         `seconds` duration.
         '''
         hz = eng_param.frequency
-        for sample, duration in zip(seconds, self.NAME_VALUES['durations']):
+        for second, duration in zip(seconds, self.NAME_VALUES['durations']):
             for takeoff in sections.get_slices():
                 arrays = eng_param.array[slices_int(takeoff)]
                 if len(arrays) > 0:
-                    index, value = max_maintained_value(arrays, sample, hz, takeoff)
+                    index, value = max_maintained_value(arrays, second, hz, takeoff)
                     if index is not None and value is not None:
                         self.create_kpv(index, value, durations=duration)
 
