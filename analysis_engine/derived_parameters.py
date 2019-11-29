@@ -3864,7 +3864,13 @@ class FuelQtySmoothed(DerivedParameterNode):
     uses the fuel burn measurement to improve the estimate, with long term values
     matched to the fuel quantity measured across the whole flight.
     '''
+
+    name = 'Fuel Qty Smoothed'
     units = ut.KG
+
+    @classmethod
+    def can_operate(cls, available):
+        return any_of(cls.get_dependency_names(), available)
 
     def derive(self, fuel_burn=P('Eng (*) Fuel Burn'),
                fuel_qty=P('Fuel Qty')):
@@ -4000,7 +4006,7 @@ class GrossWeight(DerivedParameterNode):
                 all_of(('AFR Takeoff Gross Weight', 'HDF Duration', 'AFR Takeoff Fuel', 'AFR Landing Fuel'), available) or
                 all_of(('Zero Fuel Weight', 'Fuel Qty'), available))
 
-    def derive(self, zfw=P('Zero Fuel Weight'), fq=P('Fuel Qty Smoothed'),
+    def derive(self, zfw=P('Zero Fuel Weight'), fq=P('Fuel Qty'),
                hdf_duration=A('HDF Duration'),
                afr_land_wgt=A('AFR Landing Gross Weight'),
                afr_takeoff_wgt=A('AFR Takeoff Gross Weight'),

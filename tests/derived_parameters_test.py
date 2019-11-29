@@ -163,6 +163,7 @@ from analysis_engine.derived_parameters import (
     FuelQtyL,
     FuelQtyR,
     FuelQtyAux,
+    FuelQtySmoothed,
     GrossWeight,
     GrossWeightSmoothed,
     Groundspeed,
@@ -3712,6 +3713,32 @@ class TestFuelQtyAux(unittest.TestCase):
 
         dfq.derive(fq1, fq2)
         assert_array_equal(dfq.array, np.ma.ones(4) * 50)
+
+
+class TestFuelQtySmoothed(unittest.TestCase):
+
+    def test_can_operate(self):
+        expected = ('Eng (*) Fuel Flow','Fuel Qty')
+        self.assertTrue(FuelQtySmoothed.can_operate(expected))
+
+    def test_basic(self):
+        fuel_qty = P('Fuel Qty', array=np.ma.array([10.0,9.01,7.99,7]) * 10000.0)
+        fuel_burn = P('Eng (*) Fuel Burn', array=np.ma.array([1.0, 2.01, 2.99, 4])*10000)
+        fqs = FuelQtySmoothed()
+        fqs.derive(fuel_burn, fuel_qty)
+        result = np.ma.array([10.0,9,8,7])
+        assert_array_almost_equal(fqs.array / 10000.0, result, decimal=2)
+
+    def test_masked(self):
+        fuel_qty = P('Fuel Qty', array=np.ma.array([10.0,9.01,7.99,7]) * 10000.0)
+        fuel_burn = P('Eng (*) Fuel Burn', array=np.ma.array(data=[1.0, 2.01, 2.99, 4],
+                                                             mask=[0,0,1,0])*10000)
+        fqs = FuelQtySmoothed()
+        fqs.derive(fuel_burn, fuel_qty)
+        result = np.ma.array([10.0,9,8,7])
+        assert_array_almost_equal(fqs.array / 10000.0, result, decimal=2)
+        self.assertTrue(fqs.array.mask[2])
+
 
 class TestGrossWeightSmoothed(unittest.TestCase):
 
