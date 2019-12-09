@@ -654,6 +654,7 @@ from analysis_engine.key_point_values import (
     AltitudeWithSpeedbrakeDeployedDuringFinalApproachMin,
     SpeedbrakeDeployedDuringGoAroundDuration,
     SpeedbrakeDeployedWithFlapDuration,
+    SpeedbrakeDeployedWithGearDownDuration,
     SpeedbrakeDeployedWithPowerOnDuration,
     SpoilersDeployedDurationDuringLanding,
     StallWarningDuration,
@@ -19528,6 +19529,49 @@ class TestSpeedbrakeDeployedWithFlapDuration(unittest.TestCase, NodeTest):
         node.derive(spd_brk, None, flap_synth, airborne)
         self.assertEqual(node, KPV(name=name, items=[
             KeyPointValue(index=14, value=2.0, name=name),
+        ]))
+
+
+class TestSpeedbrakeDeployedWithGearDownDuration(unittest.TestCase, NodeTest):
+
+    def setUp(self):
+        self.node_class = SpeedbrakeDeployedWithGearDownDuration
+        self.operational_combinations = [
+            ('Speedbrake Selected', 'Gear Down', 'Airborne'),
+        ]
+
+    def test_derive_basic(self):
+        array = np.ma.array(([0] * 4 + [1] * 2 + [0] * 4) * 3)
+        mapping = {0: 'Undeployed/Cmd Down', 1: 'Deployed/Cmd Up'}
+        spd_brk = M('Speedbrake Selected', array=array, values_mapping=mapping)
+        airborne = buildsection('Airborne', 10, 30)
+        name = 'Speedbrake Deployed With Gear Down Duration'
+
+        array = np.ma.array([0] * 10 + [1] * 20)
+        mapping = {0: 'Up', 1: 'Down'}
+        gear_down = M(name='Gear Down', array=array, values_mapping=mapping)
+        node = self.node_class()
+        node.derive(spd_brk, gear_down, airborne)
+        self.assertEqual(node, KPV(name=name, items=[
+            KeyPointValue(index=14, value=2.0, name=name),
+            KeyPointValue(index=24, value=2.0, name=name),
+        ]))
+
+    def test_two_airborne_sections(self):
+        array = np.ma.array(([0] * 4 + [1] * 2 + [0] * 4) * 3)
+        mapping = {0: 'Undeployed/Cmd Down', 1: 'Deployed/Cmd Up'}
+        spd_brk = M('Speedbrake Selected', array=array, values_mapping=mapping)
+        airborne = buildsections('Airborne', [0, 10], [20, 30])
+        name = 'Speedbrake Deployed With Gear Down Duration'
+
+        array = np.ma.ones(30)
+        mapping = {0: 'Up', 1: 'Down'}
+        gear_down = M(name='Gear Down', array=array, values_mapping=mapping)
+        node = self.node_class()
+        node.derive(spd_brk, gear_down, airborne)
+        self.assertEqual(node, KPV(name=name, items=[
+            KeyPointValue(index=4, value=2.0, name=name),
+            KeyPointValue(index=24, value=2.0, name=name),
         ]))
 
 

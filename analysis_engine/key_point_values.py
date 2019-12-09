@@ -17078,6 +17078,26 @@ class SpeedbrakeDeployedWithFlapDuration(KeyPointValueNode):
                                                   mark='start')
 
 
+class SpeedbrakeDeployedWithGearDownDuration(KeyPointValueNode):
+    '''
+    Duration for which the speedbrake was deployed with the gear down.
+    '''
+
+    units = ut.SECOND
+
+    def derive(self,
+               spd_brk=M('Speedbrake Selected'),
+               gear=M('Gear Down'),
+               airborne=S('Airborne')):
+
+        spd_brk_dep = runs_of_ones(spd_brk.array == 'Deployed/Cmd Up')
+        gear_down = runs_of_ones(gear.array == 'Down')
+        slices = slices_and(spd_brk_dep, gear_down)
+        slices = slices_and(slices, airborne.get_slices())
+
+        self.create_kpvs_from_slice_durations(slices, self.frequency, mark='start')
+
+
 class SpeedbrakeDeployedWithPowerOnDuration(KeyPointValueNode):
     '''
     Each time the aircraft is flown with high power and the speedbrakes open,
