@@ -94,6 +94,7 @@ from analysis_engine.multistate_parameters import (
     TAWSDontSink,
     TAWSGlideslopeCancel,
     TAWSTooLowGear,
+    TAWSWindshearWarning,
     TCASFailure,
     TCASRA,
     ThrustReversers,
@@ -3922,6 +3923,39 @@ class TestTAWSTooLowGear(unittest.TestCase):
     @unittest.skip('Test Not Implemented')
     def test_derive(self):
         pass
+
+
+class TestTAWSWindshearWarning(unittest.TestCase, NodeTest):
+
+    def setUp(self):
+        self.node_class = TAWSWindshearWarning
+        self.operational_combinations = [
+            ('TAWS Windshear Warning (1)',),
+            ('TAWS Windshear Warning (2)',),
+            ('TAWS Windshear Warning (3)',),
+            ('TAWS Windshear Warning (1)','TAWS Windshear Warning (2)',),
+        ]
+
+
+    def test_derive(self):
+        array = np.ma.array([0, 0, 0, 0, 1, 1, 1, 1, 0, 0,])
+        mapping = {0:'-', 1:'Warning'}
+        taws_ws_1 = M(
+            name='TAWS Windshear Warning (1)',
+            array=np.ma.array(array),
+            values_mapping=mapping
+        )
+        array = np.ma.array([0, 0, 1, 0, 1, 0, 0, 1, 0, 0,])
+        taws_ws_2 = M(
+            name='TAWS Windshear Warning (2)',
+            array=np.ma.array(array),
+            values_mapping=mapping
+        )
+        node = self.node_class()
+        node.derive(taws_ws_1, taws_ws_2, None)
+
+        expected = np.array([0, 0, 1, 0, 1, 1, 1, 1, 0, 0])
+        np.testing.assert_equal(node.array.data, expected)
 
 
 class TestTCASFailure(unittest.TestCase):
