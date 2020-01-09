@@ -11023,7 +11023,19 @@ class EngGasTempDuringEngStartMax(KeyPointValueNode):
                 level_off = level_off_index(eng_power.array, self.frequency, 10, 1,
                                             _slice=eng_start_slice)
 
-                if level_off is not None:
+                # Look 30 sec before Engine Start but only within valid data
+                start_minus_30_sec = max(0, start - int(ceil(eng_egt.hz * 30)))
+                clumps = np.ma.clump_unmasked(eng_egt.array[start:start_minus_30_sec:-1])
+                if clumps:
+                    valid_samples_before = clumps[0].stop
+                else:
+                    valid_samples_before = 0
+
+                start -= valid_samples_before
+
+                if level_off is None:
+                    eng_start_slice = slice(start, stop)
+                else:
                     eng_start_slice = slice(start, level_off)
 
                 self.create_kpv(*max_value(eng_egt.array,
