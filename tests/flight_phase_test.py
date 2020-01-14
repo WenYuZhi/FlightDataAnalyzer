@@ -2471,7 +2471,7 @@ class TestRejectedTakeoff(unittest.TestCase):
         self.assertAlmostEqual(node[0].slice.start, 7, 0)
         self.assertAlmostEqual(node[0].slice.stop, 10, 0)
 
-    def test_derive_flight_with_togo_and_no_rejected_takeoff(self):
+    def test_derive_flight_with_toga_and_no_rejected_takeoff(self):
         accel_lon = P('Acceleration Longitudinal Offset Removed', np.ma.arange(0, 0.5, 0.1))
         grounded = buildsections('Grounded', [0,len(accel_lon.array)/2.0],[len(accel_lon.array)/2.0, len(accel_lon.array)])
         eng_running = M('Eng (*) All Running', np_ma_ones_like(accel_lon.array),
@@ -2483,6 +2483,24 @@ class TestRejectedTakeoff(unittest.TestCase):
         node = RejectedTakeoff()
         # Set a low frequency to pass slice duration checks.
         node.frequency = 1/64.0
+        node.derive(accel_lon, eng_running, grounded, eng_n1, None,
+                    toff_rwy_hdg, A('Segment Type', 'START_AND_STOP'), toga)
+        self.assertEqual(len(node), 0)
+
+    def test_derive_toga_button_press(self):
+        accel_lon = P('Acceleration Longitudinal Offset Removed',
+                      np.ma.array([0] * 3 + [0.02, 0.05, 0.02, 0, -0.17, -0.18, -0.19] + [0] * 5 +
+                                  [0.2, 0.4, 0.1] + [0.11] * 4 + [0] * 6 + [-2] +
+                                  [0] * 5 + [0.02, 0.08, 0.08, 0.08, 0.08] + [0] * 20)*1.5)
+        grounded = buildsections('Grounded', [0,len(accel_lon.array)/2.0],[len(accel_lon.array)/2.0, len(accel_lon.array)])
+        eng_running = M('Eng (*) All Running', np_ma_ones_like(accel_lon.array),
+                        values_mapping={0: 'Not Running', 1: 'Running'})
+        toff_rwy_hdg = buildsections('Takeoff Runway Heading', [0, 30])
+        toga = M('Takeoff And Go Around', np.ma.array([1]*1 + [0]*58))
+        eng_n1 = P('Eng (*) N1 Max', np.ma.array([0]*7 + [80]*3 + [0]*49))
+
+        node = RejectedTakeoff()
+        node.frequency = 1
         node.derive(accel_lon, eng_running, grounded, eng_n1, None,
                     toff_rwy_hdg, A('Segment Type', 'START_AND_STOP'), toga)
         self.assertEqual(len(node), 0)
@@ -2519,6 +2537,19 @@ class TestTakeoff(unittest.TestCase):
                        phase_fast)
         expected = buildsection('Takeoff', 1.5, 9.125)
         self.assertEqual(takeoff.get_slices(), expected.get_slices())
+
+    def test_takeoff_real_short(self):
+        takeoff = Takeoff()
+        takeoff.derive(
+            P('Heading Continuous', load_compressed(os.path.join(test_data_path, 'Takeoff_HeadingContinuous_2.npz'))),
+            P('Altitude AAL For Flight Phases',
+              load_compressed(os.path.join(test_data_path, 'Takeoff_AltitudeAAL_2.npz'))),
+            buildsection('Fast', 451, 2797),
+            buildsection('Airborne', 461, 2783),
+        )
+        self.assertEqual(len(takeoff), 1)
+        self.assertAlmostEqual(takeoff[0].slice.start, 426.01, places=2)
+        self.assertAlmostEqual(takeoff[0].slice.stop, 463.22, places=2)
 
     def test_takeoff_with_zero_slices(self):
         '''

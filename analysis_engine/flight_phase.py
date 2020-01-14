@@ -241,6 +241,9 @@ class Holding(FlightPhaseNode):
                 slices_remove_small_gaps(turn_left_bands, time_limit=HOLDING_MIN_TIME, hz=frequency),
                 this_scan.start,
             ))
+
+        # Filter out slices where start or stop is None
+        all_turn_bands = [turn for turn in all_turn_bands if turn.start and turn.stop]
         if len(all_turn_bands) > 1: # must have more than one turn
             for turn_band in all_turn_bands:
                 # Reject short periods and check that the average groundspeed was
@@ -1636,6 +1639,10 @@ class RejectedTakeoff(FlightPhaseNode):
             if toga is not None:
                 rto_list=[]
                 potential_rtos = slices_remove_small_gaps(runs_of_ones(toga.array))
+                # on some frames, TOGA is registered as a button press lasting 1 sample, so we remove anything that's
+                # less than 2 seconds, this can still break on frames that have TOGA recorded at 0.5Hz, but currently
+                # we have no such frames
+                potential_rtos = slices_remove_small_slices(potential_rtos, 2, hz=self.hz)
                 potential_rtos = slices_and(potential_rtos, n1_max_above_50)
                 # for rto in potential_rtos:
                 #     # If there is any decelleration during toga, find the first section of deceleration.
@@ -1759,9 +1766,8 @@ class Takeoff(FlightPhaseNode):
             # If it takes more than 5 minutes, he's certainly not doing a normal
             # takeoff !
             last = takeoff_run + (300 * alt_aal.frequency)
-            # Limit last to be the earliest of 5 mins or maximum altitude
-            # during fast slice to account for short flights
-            last = min(last, max_value(alt_aal.array, _slice=slice(takeoff_run, speedy.slice.stop)).index)
+            # Limit last to be the maximum altitude within 5 minutes
+            last = max_value(alt_aal.array, _slice=slice(takeoff_run, last)).index
             takeoff_end = index_at_value(alt_aal.array, INITIAL_CLIMB_THRESHOLD,
                                          slice(last, takeoff_run, -1))
 
