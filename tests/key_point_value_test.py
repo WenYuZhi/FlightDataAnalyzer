@@ -188,7 +188,7 @@ from analysis_engine.key_point_values import (
     AirspeedWithFlapMin,
     AirspeedWithGearDownMax,
     AirspeedWithSpeedbrakeDeployedMax,
-    AirspeedWithThrustReversersDeployedMin,
+    AirspeedWithThrustReversersEffectiveMin,
     AirspeedAboveFL200Max,
     AirspeedAboveFL200Min,
     AlphaFloorDuration,
@@ -461,7 +461,7 @@ from analysis_engine.key_point_values import (
     GroundspeedWhileTaxiingStraightMax,
     GroundspeedWhileTaxiingTurnMax,
     GroundspeedWithThrustReversersDeployedAnyPowerMin,
-    GroundspeedWithThrustReversersDeployedMin,
+    GroundspeedWithThrustReversersEffectiveMin,
     HeadingAtLowestAltitudeDuringApproach,
     HeadingChange,
     HeadingDeviationFromRunwayAt50FtDuringLanding,
@@ -5507,7 +5507,7 @@ class TestAirspeedAtGearDownSelection(unittest.TestCase, CreateKPVsAtKTIsTest):
 class TestAirspeedWithThrustReversersDeployedMin(unittest.TestCase, NodeTest):
 
     def setUp(self):
-        self.node_class = AirspeedWithThrustReversersDeployedMin
+        self.node_class = AirspeedWithThrustReversersEffectiveMin
         self.operational_combinations = [
             ('Airspeed True', 'Thrust Reversers Effective'),
         ]
@@ -16440,7 +16440,7 @@ class TestGroundspeedAtTOGA(unittest.TestCase, NodeTest):
 class TestGroundspeedWithThrustReversersDeployedMin(unittest.TestCase, NodeTest):
 
     def setUp(self):
-        self.node_class = GroundspeedWithThrustReversersDeployedMin
+        self.node_class = GroundspeedWithThrustReversersEffectiveMin
         self.operational_combinations = [
             ('Groundspeed', 'Thrust Reversers Effective'),
         ]

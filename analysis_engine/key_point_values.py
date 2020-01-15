@@ -4166,7 +4166,7 @@ class AirspeedWithSpeedbrakeDeployedMax(KeyPointValueNode):
 # Airspeed: Thrust Reversers
 
 
-class AirspeedWithThrustReversersDeployedMin(KeyPointValueNode):
+class AirspeedWithThrustReversersEffectiveMin(KeyPointValueNode):
     '''
     Minimum true airspeed measured with Thrust Reversers deployed and the
     maximum of either engine's EPR measurements above %.2f%% or N1 measurements
@@ -14410,7 +14410,7 @@ class GroundspeedAtTOGA(KeyPointValueNode):
             self.create_kpv(index, value_at_index(gnd_spd.array, index))
 
 
-class GroundspeedWithThrustReversersDeployedMin(KeyPointValueNode):
+class GroundspeedWithThrustReversersEffectiveMin(KeyPointValueNode):
     '''
     Minimum groundspeed measured with Thrust Reversers deployed and the maximum
     of either engine's EPR measurements above %.2f%% or N1 measurements
