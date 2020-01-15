@@ -3780,12 +3780,12 @@ class TestThrustReversersEffective(unittest.TestCase, NodeTest):
 
     def test_effective_epr(self):
         node = self.node_class()
-        node.derive(self.tr, None, self.eng_epr, self.landing)
+        node.derive(self.tr, None, self.eng_epr, self.landing, None, None)
 
         expected = np.ma.concatenate((np.ma.zeros(20), np.ma.ones(10)))
-        np.testing.assert_equal(node.array.data, expected, None, None)
+        np.testing.assert_equal(node.array.data, expected)
 
-    def test_ineffective_n1(self):
+    def test_temporarily_effective_n1(self):
         eng_n1 = P('Eng (*) N1 Max',
                    array=np.ma.concatenate((np.ma.ones(25) * 60, np.ma.ones(5) * 65))
         )
@@ -3818,7 +3818,7 @@ class TestThrustReversersEffective(unittest.TestCase, NodeTest):
         eng1_epr = P('Eng (1) EPR', array=eng_epr.array)
         eng1_n1 = P('Eng (1) N1', array=eng_n1.array, frequency=eng_n1.hz)
         node = self.node_class()
-        node.derive(self.tr, eng_n1, eng_epr, self.landing, eng1_n1, eng1_epr)
+        node.get_derived((self.tr, eng_n1, eng_epr, self.landing, eng1_n1, eng1_epr))
 
         expected = np.ma.concatenate((np.ma.zeros(25), np.ma.ones(5)))
         np.testing.assert_equal(node.array.data, expected)

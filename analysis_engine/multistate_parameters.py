@@ -551,7 +551,7 @@ class Configuration(MultistateDerivedParameterNode):
             available,
         ):
             return False
-        
+
         if manufacturer and manufacturer.value == 'Embraer' and not all_of(('Approach And Landing', 'Taxi In'), available):
             return False
 
@@ -3832,6 +3832,7 @@ class ThrustReversers(MultistateDerivedParameterNode):
 
 
 class ThrustReversersEffective(MultistateDerivedParameterNode):
+    align = False
     units = None
     values_mapping = {0: '-', 1: 'Effective'}
 
@@ -3857,6 +3858,10 @@ class ThrustReversersEffective(MultistateDerivedParameterNode):
         else:
             power = eng_n1
             threshold = REVERSE_THRUST_EFFECTIVE_N1
+
+        # Now align needed parameters to Thrust Reversers
+        power = power.get_aligned(tr)
+        landings = landings.get_aligned(tr)
 
         self.array = np_ma_zeros_like(tr.array)
         high_power = np.ma.masked_less(power.array, threshold)
