@@ -3844,14 +3844,19 @@ class ThrustReversersEffective(MultistateDerivedParameterNode):
                tr=M('Thrust Reversers'),
                eng_n1=P('Eng (*) N1 Max'),
                eng_epr=P('Eng (*) EPR Max'),
-               landings=S('Landing')):
+               landings=S('Landing'),
+               recorded_n1=P('Eng (1) N1'),
+               recorded_epr=P('Eng (1) EPR')):
 
-        if eng_n1:
-            power = eng_n1
-            threshold = REVERSE_THRUST_EFFECTIVE_N1
-        else:
+        # Use EPR only if it has a better sample rate than N1
+        n1_hz = recorded_n1.hz if recorded_n1 else 0
+        use_epr = not eng_n1 or (recorded_epr and recorded_epr.hz > n1_hz)
+        if use_epr:
             power = eng_epr
             threshold = REVERSE_THRUST_EFFECTIVE_EPR
+        else:
+            power = eng_n1
+            threshold = REVERSE_THRUST_EFFECTIVE_N1
 
         self.array = np_ma_zeros_like(tr.array)
         high_power = np.ma.masked_less(power.array, threshold)
