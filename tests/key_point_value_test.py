@@ -5524,7 +5524,7 @@ class TestAirspeedWithThrustReversersDeployedMin(unittest.TestCase, NodeTest):
         self.assertEqual(len(node), 1)
         self.assertEqual(node[0], KeyPointValue(
             index=7, value=30.0,
-            name='Airspeed With Thrust Reversers Deployed Min'))
+            name='Airspeed With Thrust Reversers Effective Min'))
 
     def test_derive_two_landings(self):
         spd=P('Airspeed', array = np.tile(np.ma.arange(100, 0, -10), 2))
@@ -5540,10 +5540,10 @@ class TestAirspeedWithThrustReversersDeployedMin(unittest.TestCase, NodeTest):
         self.assertEqual(len(node), 2)
         self.assertEqual(node[0], KeyPointValue(
             index=7, value=30.0,
-            name='Airspeed With Thrust Reversers Deployed Min'))
+            name='Airspeed With Thrust Reversers Effective Min'))
         self.assertEqual(node[1], KeyPointValue(
             index=17, value=30.0,
-            name='Airspeed With Thrust Reversers Deployed Min'))
+            name='Airspeed With Thrust Reversers Effective Min'))
 
 
 class TestAirspeedAtThrustReversersSelection(unittest.TestCase, NodeTest):
@@ -16457,7 +16457,7 @@ class TestGroundspeedWithThrustReversersDeployedMin(unittest.TestCase, NodeTest)
         self.assertEqual(len(node), 1)
         self.assertEqual(node[0], KeyPointValue(
             index=7, value=30.0,
-            name='Groundspeed With Thrust Reversers Deployed Min'))
+            name='Groundspeed With Thrust Reversers Effective Min'))
 
     def test_derive_two_landings(self):
         spd=P('Groundspeed', array = np.tile(np.ma.arange(100, 0, -10), 2))
@@ -16473,10 +16473,10 @@ class TestGroundspeedWithThrustReversersDeployedMin(unittest.TestCase, NodeTest)
         self.assertEqual(len(node), 2)
         self.assertEqual(node[0], KeyPointValue(
             index=7, value=30.0,
-            name='Groundspeed With Thrust Reversers Deployed Min'))
+            name='Groundspeed With Thrust Reversers Effective Min'))
         self.assertEqual(node[1], KeyPointValue(
             index=17, value=30.0,
-            name='Groundspeed With Thrust Reversers Deployed Min'))
+            name='Groundspeed With Thrust Reversers Effective Min'))
 
 
 class TestGroundspeedStabilizerOutOfTrimDuringTakeoffMax(unittest.TestCase,
