@@ -16459,6 +16459,7 @@ class TestFuelQtyWingDifferenceOverThresholdMax(unittest.TestCase):
         left_wing = P('Fuel Qty (L)', array=np.ma.ones(10) * 10_000, frequency=1/4)
         right_wing = P('Fuel Qty (R)', array=np.ma.ones(10) * (10_000 - 1_133), frequency=1/4)
         airbornes = buildsection('Airborne', 0, 10)
+        airbornes.frequency = 1/4
         family = A('Family', value='B767')
         node = self.node_class()
         node.get_derived((left_wing, right_wing, airbornes, family))
@@ -16469,6 +16470,7 @@ class TestFuelQtyWingDifferenceOverThresholdMax(unittest.TestCase):
         left_wing = P('Fuel Qty (L)', array=np.ma.ones(10) * 10_000, frequency=1/4)
         right_wing = P('Fuel Qty (R)', array=np.ma.ones(10) * (10_000 - 2_000), frequency=1/4)
         airbornes = buildsection('Airborne', 0, 10)
+        airbornes.frequency = 1/4
         family = A('Family', value='B767')
         node = self.node_class()
         node.get_derived((left_wing, right_wing, airbornes, family))
@@ -16481,6 +16483,7 @@ class TestFuelQtyWingDifferenceOverThresholdMax(unittest.TestCase):
         left_wing = P('Fuel Qty (L)', array=np.ma.ones(10) * 18_500, frequency=1/4)
         right_wing = P('Fuel Qty (R)', array=np.ma.ones(10) * (18_500 - 679), frequency=1/4)
         airbornes = buildsection('Airborne', 0, 10)
+        airbornes.frequency = 1/4
         family = A('Family', value='B767')
         node = self.node_class()
         node.get_derived((left_wing, right_wing, airbornes, family))
@@ -16491,6 +16494,7 @@ class TestFuelQtyWingDifferenceOverThresholdMax(unittest.TestCase):
         left_wing = P('Fuel Qty (L)', array=np.ma.ones(10) * 18_500, frequency=1/4)
         right_wing = P('Fuel Qty (R)', array=np.ma.ones(10) * (18_500 - 800), frequency=1/4)
         airbornes = buildsection('Airborne', 0, 10)
+        airbornes.frequency = 1/4
         family = A('Family', value='B767')
         node = self.node_class()
         node.get_derived((left_wing, right_wing, airbornes, family))
@@ -16500,9 +16504,10 @@ class TestFuelQtyWingDifferenceOverThresholdMax(unittest.TestCase):
         self.assertEqual(node[0].value, -800)
 
     def test_high_imbal_interpolation(self):
-        left_wing = P('Fuel Qty (L)', array=np.ma.ones(10) * 15_500 - 1_000, frequency=1/4)
-        right_wing = P('Fuel Qty (R)', array=np.ma.ones(10) * 15_500, frequency=1/4)
+        left_wing = P('Fuel Qty (L)', array=np.ma.ones(10) * 15_500 - 1_000, frequency=1/64)
+        right_wing = P('Fuel Qty (R)', array=np.ma.ones(10) * 15_500, frequency=1/64)
         airbornes = buildsection('Airborne', 0, 10)
+        airbornes.frequency = 1/64
         family = A('Family', value='B767')
         node = self.node_class()
         node.get_derived((left_wing, right_wing, airbornes, family))
