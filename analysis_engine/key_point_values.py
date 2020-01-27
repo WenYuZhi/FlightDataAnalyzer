@@ -14282,9 +14282,9 @@ class FuelQtyWingDifferenceOverThresholdMax(KeyPointValueNode):
         diff = np.ma.masked_where(abs(diff) < imbalance_limit, diff)
 
         # Second_window needs a time window that is a binary power of the sample rate
-        # we want to use second window over a window of 2 samples -> 2 / freq.
+        # we want to use second window over a window of minimum 10 seconds.
         self.create_kpv_from_slices(
-            second_window(diff, left_wing.frequency, 2 / left_wing.frequency),
+            second_window(diff, left_wing.frequency, 10, extend_window=True),
             airbornes.get_slices(),
             max_abs_value)
 
