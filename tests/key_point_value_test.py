@@ -16432,7 +16432,9 @@ class TestFuelQtyWingDifferenceOverThresholdMax(unittest.TestCase):
     def setUp(self):
         self.node_class = FuelQtyWingDifferenceOverThresholdMax
 
-    def test_can_operate(self):
+    @patch('analysis_engine.key_point_values.at')
+    def test_can_operate(self, at):
+        at.get_fuel_imbalance_limits.return_value = ((21_772, 36_197), (1_134, 680))
         opts = self.node_class.get_operational_combinations(
             family=A('Family', value='B767')
         )
