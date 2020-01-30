@@ -4448,8 +4448,8 @@ class AirspeedBetweenFL200AndFL300Max(KeyPointValueNode):
     def derive(self, air_spd= P('Airspeed'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(air_spd.array,
-                                       alt.slices_between(20000, 30000), max_value)
+        self.create_kpv_from_slices(air_spd.array,
+                                    alt.slices_between(20000, 30000), max_value)
 
 
 class AirspeedBetweenFL200AndFL300Min(KeyPointValueNode):
@@ -4463,8 +4463,8 @@ class AirspeedBetweenFL200AndFL300Min(KeyPointValueNode):
     def derive(self, air_spd= P('Airspeed'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(air_spd.array,
-                                       alt.slices_between(20000, 30000), min_value)
+        self.create_kpv_from_slices(air_spd.array,
+                                    alt.slices_between(20000, 30000), min_value)
 
 
 class AirspeedAboveFL300Max(KeyPointValueNode):
@@ -4477,8 +4477,8 @@ class AirspeedAboveFL300Max(KeyPointValueNode):
     def derive(self, air_spd= P('Airspeed'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(air_spd.array,
-                                       alt.slices_above(30000), max_value)
+        self.create_kpv_from_slices(air_spd.array,
+                                    alt.slices_above(30000), max_value)
 
 
 class AirspeedAboveFL300Min(KeyPointValueNode):
@@ -4491,8 +4491,8 @@ class AirspeedAboveFL300Min(KeyPointValueNode):
     def derive(self, air_spd= P('Airspeed'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(air_spd.array,
-                                       alt.slices_above(30000), min_value)
+        self.create_kpv_from_slices(air_spd.array,
+                                    alt.slices_above(30000), min_value)
 
 
 class AirspeedAboveStickShakerSpeedMin(KeyPointValueNode):
@@ -9497,8 +9497,8 @@ class MachBetweenFL200AndFL300Max(KeyPointValueNode):
                alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(mach.array,
-                                       alt.slices_between(20000, 30000), max_value)
+        self.create_kpv_from_slices(mach.array,
+                                    alt.slices_between(20000, 30000), max_value)
 
 class MachBetweenFL200AndFL300Min(KeyPointValueNode):
     '''
@@ -9513,8 +9513,8 @@ class MachBetweenFL200AndFL300Min(KeyPointValueNode):
                alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(mach.array,
-                                       alt.slices_between(20000, 30000), min_value)
+        self.create_kpv_from_slices(mach.array,
+                                    alt.slices_between(20000, 30000), min_value)
 
 
 class MachAboveFL300Max(KeyPointValueNode):
@@ -9530,8 +9530,8 @@ class MachAboveFL300Max(KeyPointValueNode):
                alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(mach.array,
-                                       alt.slices_above(30000), max_value)
+        self.create_kpv_from_slices(mach.array,
+                                    alt.slices_above(30000), max_value)
 
 class MachAboveFL300Min(KeyPointValueNode):
     '''
@@ -9546,8 +9546,8 @@ class MachAboveFL300Min(KeyPointValueNode):
                alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(mach.array,
-                                       alt.slices_above(30000), min_value)
+        self.create_kpv_from_slices(mach.array,
+                                    alt.slices_above(30000), min_value)
 
 ########################################
 # Mach: Flap
@@ -15488,8 +15488,8 @@ class PitchBetweenFL200AndFL300Max(KeyPointValueNode):
     def derive(self, pitch=P('Pitch'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(pitch.array,
-                                       alt.slices_between(20000,30000), max_value)
+        self.create_kpv_from_slices(pitch.array,
+                                    alt.slices_between(20000,30000), max_value)
 
 class PitchBetweenFL200AndFL300Min(KeyPointValueNode):
     '''
@@ -15501,8 +15501,8 @@ class PitchBetweenFL200AndFL300Min(KeyPointValueNode):
     def derive(self, pitch=P('Pitch'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(pitch.array,
-                                       alt.slices_between(20000,30000), min_value)
+        self.create_kpv_from_slices(pitch.array,
+                                    alt.slices_between(20000,30000), min_value)
 
 
 class PitchAboveFL300Max(KeyPointValueNode):
@@ -15515,8 +15515,8 @@ class PitchAboveFL300Max(KeyPointValueNode):
     def derive(self, pitch=P('Pitch'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(pitch.array,
-                                       alt.slices_above(30000), max_value)
+        self.create_kpv_from_slices(pitch.array,
+                                    alt.slices_above(30000), max_value)
 
 class PitchAboveFL300Min(KeyPointValueNode):
     '''
@@ -15528,8 +15528,8 @@ class PitchAboveFL300Min(KeyPointValueNode):
     def derive(self, pitch=P('Pitch'), alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(pitch.array,
-                                       alt.slices_above(30000), min_value)
+        self.create_kpv_from_slices(pitch.array,
+                                    alt.slices_above(30000), min_value)
 
 
 ##############################################################################
@@ -16662,7 +16662,7 @@ class RollBetweenFL200AndFL300Max(KeyPointValueNode):
                alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(
+        self.create_kpv_from_slices(
             roll.array,
             alt.slices_between(20000,30000),
             max_abs_value,
@@ -16682,7 +16682,7 @@ class RollAboveFL300Max(KeyPointValueNode):
                alt=P('Altitude STD Smoothed')):
 
         alt.array = nearest_neighbour_mask_repair(alt.array)
-        self.create_kpvs_within_slices(
+        self.create_kpv_from_slices(
             roll.array,
             alt.slices_above(30000),
             max_abs_value,
