@@ -17088,12 +17088,23 @@ class SpeedbrakeDeployedWithGearDownDuration(KeyPointValueNode):
     def derive(self,
                spd_brk=M('Speedbrake Selected'),
                gear=M('Gear Down'),
-               airborne=S('Airborne')):
+               airborne=S('Airborne'),
+               altitudes_descending=KTI('Altitude When Descending')):
 
         spd_brk_dep = runs_of_ones(spd_brk.array == 'Deployed/Cmd Up')
         gear_down = runs_of_ones(gear.array == 'Down')
         slices = slices_and(spd_brk_dep, gear_down)
-        slices = slices_and(slices, airborne.get_slices())
+        airs = airborne.get_slices()
+
+        airs_to_20ft = []
+        for air in airs:
+            alts = altitudes_descending.get(name='20 Ft Descending', within_slice=air)
+            if alts:
+                alt = alts.get_last()
+                air = slice(air.start, alt.index)
+            airs_to_20ft.append(air)
+
+        slices = slices_and(slices, airs_to_20ft)
 
         self.create_kpvs_from_slice_durations(slices, self.frequency, mark='start')
 
