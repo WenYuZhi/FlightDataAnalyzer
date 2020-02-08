@@ -12477,8 +12477,8 @@ class TestEngGasTempDuringEngStartMax(unittest.TestCase, NodeTest):
 
     def test_derive(self):
         eng_starts = EngStart('Eng Start', items=[
-            KeyTimeInstance(163, 'Eng (1) Start'),
-            KeyTimeInstance(98, 'Eng (2) Start'),
+            KeyTimeInstance(163.2, 'Eng (1) Start'),
+            KeyTimeInstance(98.2, 'Eng (2) Start'),
         ])
         eng_1_egt = load(os.path.join(test_data_path, 'eng_start_eng_1_egt.nod'))
         eng_2_egt = load(os.path.join(test_data_path, 'eng_start_eng_2_egt.nod'))

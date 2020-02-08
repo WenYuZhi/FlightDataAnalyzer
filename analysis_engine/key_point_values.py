@@ -11016,7 +11016,7 @@ class EngGasTempDuringEngStartMax(KeyPointValueNode):
 
             for eng_start in eng_number_starts:
                 # Search for 10 minutes for level off.
-                start = eng_start.index
+                start = int(eng_start.index)
                 stop = start + search_duration
                 eng_start_slice = slice(start, stop)
 
