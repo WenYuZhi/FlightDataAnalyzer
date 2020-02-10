@@ -12509,6 +12509,17 @@ class TestEngGasTempDuringEngStartMax(unittest.TestCase, NodeTest):
         self.assertEqual(node[0].index, 0)
         self.assertEqual(node[0].value, 700)
 
+    def test_eng_start_at_start_of_recording(self):
+        eng_starts = EngStart('Eng Start', items=[
+            KeyTimeInstance(0.2, 'Eng (1) Start'),
+        ])
+        eng_1_egt = load(os.path.join(test_data_path, 'eng_start_eng_1_egt.nod'))
+        eng_1_n3 = load(os.path.join(test_data_path, 'eng_start_eng_1_n3.nod'))
+        node = EngGasTempDuringEngStartMax()
+        node.derive(eng_1_egt, None, None, None, eng_1_n3, None, None,
+                    None, None, None, None, None, None, None, None, None, eng_starts)
+        self.assertEqual(len(node), 1)
+
 
 class TestEngGasTempDuringEngStartForXSecMax(unittest.TestCase, NodeTest):
 

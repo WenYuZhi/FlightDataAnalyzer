@@ -11025,11 +11025,11 @@ class EngGasTempDuringEngStartMax(KeyPointValueNode):
 
                 # Look 30 sec before Engine Start but only within valid data
                 start_minus_30_sec = max(0, start - int(ceil(eng_egt.hz * 30)))
-                clumps = np.ma.clump_unmasked(eng_egt.array[start:start_minus_30_sec:-1])
-                if clumps:
-                    valid_samples_before = clumps[0].stop
-                else:
-                    valid_samples_before = 0
+                valid_samples_before = 0
+                if start > start_minus_30_sec:
+                    clumps = np.ma.clump_unmasked(eng_egt.array[start:start_minus_30_sec:-1])
+                    if clumps:
+                        valid_samples_before = clumps[0].stop
 
                 start -= valid_samples_before
 
