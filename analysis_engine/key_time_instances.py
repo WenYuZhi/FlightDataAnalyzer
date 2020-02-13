@@ -1577,19 +1577,21 @@ class Touchdown(KeyTimeInstanceNode):
                 if flap_change_idx:
                     index_gog = int(flap_change_idx) + land.slice.start
 
-            index_ref = min([x for x in (index_alt, index_gog) if x is not None])
+            index_alt_and_gog = [x for x in (index_alt, index_gog) if x is not None]
+            index_ref = min(index_alt_and_gog)
+            index_ref_end = max(index_alt_and_gog)
 
             # With an estimate from the height and perhaps gear switch, set
             # up a period to scan across for accelerometer based
             # indications...
-            period_end = int(ceil(index_ref + dt_post * hz))
+            period_end = int(ceil(index_ref_end + dt_post * hz))
             period_start = max(floor(index_ref - dt_pre * hz), 0)
             if alt_rad:
                 # only look for 5ft altitude if Radio Altitude is recorded,
                 # due to Altitude STD accuracy and ground effect.
                 alt_rad_start = index_at_value(alt.array, 5, _slice=slice(period_end, period_start, -1))
                 if alt_rad_start is not None:
-                    period_start = alt_rad_start
+                    period_start = int(alt_rad_start)
             period = slice(period_start, period_end)
 
             if acc_long:
@@ -1699,7 +1701,8 @@ class Touchdown(KeyTimeInstanceNode):
             name = 'Touchdown with values Ax=%.4f, Az=%.4f and dAz=%.4f' %(peak_ax, peak_az, delta)
             self.info(name)
             tz_offset = index_ref - period.start
-            timebase=np.linspace(-tz_offset, dt_post*hz, tz_offset+(dt_post*hz)+1)
+            index_dt = index_ref_end - index_ref
+            timebase=np.linspace(-tz_offset, index_dt + dt_post*hz, tz_offset+(index_dt +dt_post*hz)+1)
             plot_period = slice(int(floor(index_ref-tz_offset)), int(floor(index_ref-tz_offset+len(timebase))))
             plt.figure()
             if alt:
