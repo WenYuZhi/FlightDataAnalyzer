@@ -3791,6 +3791,7 @@ class TestTAWSAlert(unittest.TestCase):
                        'TAWS Caution',
                        'TAWS Dont Sink',
                        'TAWS Glideslope',
+                       'TAWS Obstacle Awareness Caution',
                        'TAWS Predictive Windshear',
                        'TAWS Pull Up',
                        'TAWS Sink Rate',
@@ -3825,6 +3826,7 @@ class TestTAWSAlert(unittest.TestCase):
                                 None,
                                 None,
                                 None,
+                                None,
                                 self.pull_up,
                                 None,
                                 None,
@@ -3848,6 +3850,7 @@ class TestTAWSAlert(unittest.TestCase):
                                 None,
                                 None,
                                 None,
+                                None,
                                 self.pull_up,
                                 None,
                                 None,
@@ -3862,14 +3865,15 @@ class TestTAWSAlert(unittest.TestCase):
 
     def test_derive_zeros(self):
         result = [0,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0]
-
-        terrain_array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
-        caution = M(name='TAWS Caution Terrain', array=np.ma.array(terrain_array), values_mapping={1:'Warning'})
-        caution.array.mask = True
+        caution = M(
+            name='TAWS Caution Terrain',
+            array=np.ma.masked_all_like(result),
+            values_mapping={1:'Caution'}
+        )
 
         self.taws_alert.get_derived((self.airs,
                                      caution,
+                                     None,
                                      None,
                                      None,
                                      None,
