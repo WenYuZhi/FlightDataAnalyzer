@@ -6609,13 +6609,10 @@ class HeightSelectedOnApproachMin(KeyPointValueNode):
 class QNHDifferenceDuringApproach(KeyPointValueNode):
     '''
     This KPV calculates the QNH difference between actual QNH and expected
-    QNH during approach when crossing 100 ft AAL in descent or at the minimum
-    altitude reached (due to go around) whichever is greater. 100 ft altitude
+    QNH during approach when crossing 100 ft AAL in descent. 100 ft altitude
     will avoid any ground effect which induces a dip in Altitude STD during
     flare. Actual QNH is the QNH set by the pilots. Expected QNH is the QNH
     required to read the runway elevation on the ground.
-
-    Altitude Visualization With Ground Offset provides the expected QNH altitude.
 
     Wrong QNH are particularly dangerous during non-precision approaches, as
     they are the sole reference to the aircraft vertical profile.
@@ -6633,8 +6630,7 @@ class QNHDifferenceDuringApproach(KeyPointValueNode):
             if app.approach_runway is None:
                 continue
             index = index_at_value(alt_aal.array, 100,
-                                   slice(app.slice.stop, app.slice.start, -1),
-                                   endpoint='closing')
+                                   slice(app.slice.stop, app.slice.start, -1))
             if index is None:
                 continue
             final_alt = alt_aal.array[int(index)]
