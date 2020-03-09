@@ -20,13 +20,13 @@ from flightdatautilities import aircrafttables as at, units as ut
 from analysis_engine.exceptions import DataFrameError
 
 from analysis_engine.node import (
-    A, M, P, S, KPV, KTI, aeroplane, App, DerivedParameterNode, helicopter
+    A, M, P, S, KPV, KTI, aeroplane, aeroplane_only, App, DerivedParameterNode, helicopter,
+
 )
 
 from analysis_engine.library import (
     air_track,
     align,
-    all_deps,
     all_of,
     any_of,
     alt2press,
@@ -5642,9 +5642,7 @@ class MagneticVariationFromRunway(DerivedParameterNode):
     '''
     units = ut.DEGREE
 
-    @classmethod
-    def can_operate(cls, available, ac_type=A('Aircraft Type')):
-        return ac_type != helicopter and all_deps(cls, available)
+    can_operate = aeroplane_only
 
     def derive(self,
                mag=P('Magnetic Variation'),
