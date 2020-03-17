@@ -51,6 +51,7 @@ from analysis_engine.key_time_instances import (
     GearUpSelection,
     GearUpSelectionDuringGoAround,
     GoAround,
+    GPSSignalLost,
     InitialClimbStart,
     LandingDecelerationEnd,
     LandingStart,
@@ -2477,3 +2478,76 @@ class TestLastEngFuelFlowStop(unittest.TestCase):
         leffs = LastEngFuelFlowStop()
         leffs.derive(ff)
         self.assertEqual(leffs[0].index, 13)
+
+
+class TestGPSSignalLost:
+    def test_no_signal_lost(self):
+        gps = M(
+            'GPS Operational',
+            MappedArray(np.ma.ones(20)),
+            values_mapping={0: '-', 1: 'Operational'}
+
+        )
+        airs = buildsection('Airborne', 3, 18)
+        node = GPSSignalLost()
+        node.derive(gps, airs)
+
+        assert len(node) == 0
+
+    def test_signal_lost(self):
+        gps = M(
+            'GPS Operational',
+            MappedArray(np.ma.ones(100)),
+            values_mapping={0: '-', 1: 'Operational'}
+
+        )
+        gps.array[20:80] = '-'
+        airs = buildsection('Airborne', 3, 98)
+        node = GPSSignalLost()
+        node.derive(gps, airs)
+
+        assert len(node) == 1
+        assert node[0].index == 19.5
+
+    def test_signal_lost_on_ground(self):
+        gps = M(
+            'GPS Operational',
+            MappedArray(np.ma.ones(100)),
+            values_mapping={0: '-', 1: 'Operational'}
+
+        )
+        gps.array[20:80] = '-'
+        airs = buildsection('Airborne', 70, 98)
+        node = GPSSignalLost()
+        node.derive(gps, airs)
+
+        assert len(node) == 0
+
+    def test_signal_lost_and_masked(self):
+        gps = M(
+            'GPS Operational',
+            MappedArray(np.ma.ones(100)),
+            values_mapping={0: '-', 1: 'Operational'}
+
+        )
+        gps.array[40:] = 'Operational'
+        gps.array[80:] = np.ma.masked
+        airs = buildsection('Airborne', 10, 99)
+        node = GPSSignalLost()
+        node.derive(gps, airs)
+
+        assert len(node) == 0
+
+    def test_several_short_signal_losts(self):
+        gps = M(
+            'GPS Operational',
+            MappedArray(np.ma.ones(100)),
+            values_mapping={0: '-', 1: 'Operational'}
+
+        )
+        gps.array.data.reshape(20, -1)[::4] = 0
+        airs = buildsection('Airborne', 10, 99)
+        node = GPSSignalLost()
+        node.derive(gps, airs)
+
+        assert len(node) == 0

@@ -2301,3 +2301,22 @@ class DistanceFromThreshold(KeyTimeInstanceNode, DistanceFromLocationMixin):
                 rwy.value['start']['latitude'],
                 rwy.value['start']['longitude'],
                 lat, lon, distance, direction='backward', _slice=airs[0].slice)
+
+
+class GPSSignalLost(KeyTimeInstanceNode):
+    '''
+    Creates KTIs when GPS Operational is not Operational anymore.
+
+    Restricted to Airborne sections only and for signal lost of at least 60 seconds.
+    '''
+
+    name = 'GPS Signal Lost'
+
+    def derive(self, gps=M('GPS Operational'), airs=S('Airborne')):
+        # Restrict signal lost to 60 sec
+        min_samples = 60 * self.hz
+        idxs = find_edges_on_state_change(
+            '-', gps.array, change='entering', phase=airs, min_samples=min_samples
+        )
+        for idx in idxs:
+            self.create_kti(idx)
