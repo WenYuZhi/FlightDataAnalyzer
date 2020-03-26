@@ -14268,16 +14268,9 @@ class FuelQtyWingDifferenceOverThresholdMax(KeyPointValueNode):
         diff = right_wing.array - left_wing.array
         total = right_wing.array + left_wing.array
 
-        total_fuel_qts, imbal_limits = at.get_fuel_imbalance_limits(family=family.value)
-        # total fuel weight in the wings thresholds
-        fuel_qt_low, fuel_qt_high = total_fuel_qts
-        # permitted fuel imbalance levels
-        imbal_limit_high, imbal_limit_low = imbal_limits
-
-        # Interpolate
-        xp = [fuel_qt_low, fuel_qt_high]
-        yp = [imbal_limit_high, imbal_limit_low]
-        imbalance_limit = np.interp(total, xp, yp)
+        # at.get_fuel_imbalance_limits returns
+        # ((fuel_qt_low, fuel_qt_high), (imbal_limit_high, imbal_limit_low))
+        imbalance_limit = np.interp(total, *at.get_fuel_imbalance_limits(family=family.value))
 
         diff = np.ma.masked_where(abs(diff) < imbalance_limit, diff)
 
